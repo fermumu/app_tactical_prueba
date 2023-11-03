@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "314383299963",
+    "project_id": "apptactical-74663",
+    "storage_bucket": "apptactical-74663.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:314383299963:android:4868c499fd7ba7e402f9de",
+        "android_client_info": {
+          "package_name": "com.example.app_tactical_store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "314383299963-94ch0k8144nutl2l75f23d3u3rf3c4gd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.app_tactical_store",
+            "certificate_hash": "bf5433ae4ad06924aadcc4c06bfe6495cc270d72"
+          }
+        },
+        {
+          "client_id": "314383299963-tn4sptlu6vkaafbljsh2fe14puri0e8l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0owW-ZEnNJH1dOzpemj2PCvplUtWzDZ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "314383299963-tn4sptlu6vkaafbljsh2fe14puri0e8l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
