@@ -1,4 +1,6 @@
+import 'package:apptacticalstore/config/services/firebase_database_service.dart';
 import 'package:apptacticalstore/presentations/screens/products/products_cart.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
@@ -50,7 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _productosDb();
+    _loadProductsFromFirestore();
+  }
+
+  Future<void> _loadProductsFromFirestore() async {
+    final products = await fetchProductsData();
+    setState(() {
+      _productosModel = products;
+    });
   }
 
   @override
@@ -156,99 +165,89 @@ class _HomeScreenState extends State<HomeScreen> {
 
   GridView _vitrinProductos() {
     return GridView.builder(
-      padding: const EdgeInsets.all(4.0),
-      gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-      itemCount: _productosModel.length,
-      itemBuilder: (context, index) {
-        final String image = _productosModel[index].image;
-        var itemList = _productosModel[index];
-        return Card(
-          elevation: 4.0,
-          child: Stack(
-            fit: StackFit.loose,
-            alignment: Alignment.center,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Image.asset(
-                      'assets/images_products/$image',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  Text(
-                    itemList.name,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 20.0),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      const Text('precio'),
-                      Text(itemList.price.toString(),
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          right: 8.0,
-                          bottom: 8.0,
-                        ),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: GestureDetector(
-                            child: (!_listProductosCart.contains(itemList))
-                                ? const Icon(
-                                    Icons.shopping_cart,
-                                    color: Colors.green,
-                                    size: 30,
-                                  )
-                                : const Icon(
-                                    Icons.shopping_cart,
-                                    color: Colors.red,
-                                    size: 30,
-                                  ),
-                            onTap: () {
-                              setState(() {
-                                if (!_listProductosCart.contains(itemList))
-                                  _listProductosCart.add(itemList);
-                                else
-                                  _listProductosCart.remove(itemList);
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
+        padding: const EdgeInsets.all(4.0),
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemCount: _productosModel.length,
+        itemBuilder: (context, index) {
+          final product = _productosModel[index];
 
-  void _productosDb() {
-    var list = <ProductosModel>[
-      ProductosModel(
-          name: 'Alpha 22', image: 'alpha22Negro.jpg', price: 120.000),
-      ProductosModel(
-          name: 'Alpha 22', image: 'alpha22Verde.jpg', price: 120.000),
-      ProductosModel(
-          name: 'Alpha 22', image: 'alpha22Gris.jpg', price: 120.000),
-      ProductosModel(
-          name: 'Alpha 22', image: 'alpha22Coyote.jpg', price: 120.000),
-      ProductosModel(name: 'Alpha 22', image: 'A22GG.jpg', price: 120.000),
-      ProductosModel(name: 'Alpha 22', image: 'A22GN.jpg', price: 120.000),
-      ProductosModel(name: 'Alpha 22', image: 'A22GV.jpg', price: 120.000),
-    ];
-    setState(() {
-      _productosModel = list;
-    });
+          return Card(
+              elevation: 4.0,
+              child: Column(
+                children: [
+                  Stack(
+                    fit: StackFit.loose,
+                    alignment: Alignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // CachedNetworkImage(
+                          //   imageUrl: product.image,
+                          //   fit: BoxFit.contain,
+                          // ),
+                          // Expanded(
+                          //   child: Image.network(
+                          //     product.image,
+                          //     fit: BoxFit.contain,
+                          //   ),
+                          // ),
+                          Text(
+                            product.name,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 20.0),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const SizedBox(
+                                height: 25,
+                              ),
+                              const Text('precio'),
+                              Text(product.price.toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  right: 8.0,
+                                  bottom: 8.0,
+                                ),
+                                child: Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: GestureDetector(
+                                    child:
+                                        (!_listProductosCart.contains(product))
+                                            ? const Icon(
+                                                Icons.shopping_cart,
+                                                color: Colors.green,
+                                                size: 30,
+                                              )
+                                            : const Icon(
+                                                Icons.shopping_cart,
+                                                color: Colors.red,
+                                                size: 30,
+                                              ),
+                                    onTap: () {
+                                      setState(() {
+                                        if (!_listProductosCart
+                                            .contains(product))
+                                          _listProductosCart.add(product);
+                                        else
+                                          _listProductosCart.remove(product);
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ));
+        });
   }
 }

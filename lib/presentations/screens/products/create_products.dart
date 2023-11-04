@@ -113,9 +113,12 @@ class _CreateProductsState extends State<CreateProducts> {
               ValidateButton(
                   buttonText: 'ENVIAR',
                   onPressed: () async {
-                    await saveProduct(
-                            productName.text, productPrice.text, selectedImage!)
-                        .then((_) => {_showConfirmationSaveProduct(context)});
+                    final double price =
+                        double.tryParse(productPrice.text) ?? 0.0;
+                    if (selectedImage != null) {
+                      await saveProduct(productName.text, price, selectedImage!)
+                          .then((_) => {_showConfirmationSaveProduct(context)});
+                    }
                   })
             ],
           ),
