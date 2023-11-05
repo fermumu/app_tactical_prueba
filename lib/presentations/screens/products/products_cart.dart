@@ -1,5 +1,7 @@
 import 'package:apptacticalstore/domain/models/productos_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fancy_flutter_dialog/fancy_flutter_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProductsCart extends StatefulWidget {
@@ -99,6 +101,8 @@ class _ProductsCartState extends State<ProductsCart> {
                 itemBuilder: (context, index) {
                   final String imagen = _productosCart[index].image;
                   var item = _productosCart[index];
+                  final product = _productosCart[index];
+                  final imageUrl = product.image;
                   return Column(
                     children: [
                       Padding(
@@ -112,16 +116,23 @@ class _ProductsCartState extends State<ProductsCart> {
                                   child: Container(
                                     width: 100,
                                     height: 100,
-                                    child: Image.asset(
-                                      'assets/images_products/$imagen',
-                                      fit: BoxFit.contain,
-                                    ),
+                                    child: CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              fit: BoxFit.contain,
+                              placeholder: (_, __) {
+                                return const Center(
+                                  child: CupertinoActivityIndicator(
+                                    radius: 15,
+                                  ),
+                                );
+                              },
+                            ),
                                   ),
                                 ),
                                 Column(
                                   children: [
                                     Text(
-                                      item.name,
+                                      product.name,
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
@@ -194,7 +205,7 @@ class _ProductsCartState extends State<ProductsCart> {
                                   width: 38,
                                 ),
                                 Text(
-                                  item.price.toString(),
+                                  product.price.toString(),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 24.0,

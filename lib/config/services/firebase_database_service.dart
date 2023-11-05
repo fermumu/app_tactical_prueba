@@ -1,15 +1,42 @@
-import 'package:apptacticalstore/domain/models/productos_model.dart';
+import 'dart:io';
+import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:apptacticalstore/domain/models/productos_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 FirebaseFirestore dataBase = FirebaseFirestore.instance;
+final storage = FirebaseStorage.instance;
 
-Future<void> saveProduct(String name, double price, String imageUrl) async {
+// Future<void> saveProduct(String name, double price, String imageUrl) async {
+//   try {
+//     await dataBase
+//         .collection('productos')
+//         .add({'name': name, 'price': price, 'imageUrl': imageUrl});
+//   } catch (e) {
+//     print('Error al enviar informacion bd ... $e');
+//   }
+// }
+
+Future<void> saveProduct(String name, double price, String imagePath) async {
   try {
-    await dataBase
-        .collection('productos')
-        .add({'name': name, 'price': price, 'imageUrl': imageUrl});
+    // 1. Crea un objeto File desde la ruta de la imagen
+    File imageFile = File(imagePath);
+
+    // 2. Subir la imagen a Firebase Storage y obtener la URL
+    final imageFileName = 'product_images/${basename(imageFile.path)}'; // Nombre de archivo en Storage
+    final imageReference = storage.ref().child(imageFileName);
+    final uploadTask = imageReference.putFile(imageFile);
+    final TaskSnapshot storageTaskSnapshot = await uploadTask;
+    final imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
+
+    // 3. Guardar los datos en Firestore, incluyendo la URL de la imagen
+    await dataBase.collection('productos').add({
+      'name': name,
+      'price': price,
+      'imageUrl': imageUrl,
+    });
   } catch (e) {
-    print('Error al enviar informacion bd ... $e');
+    print('Error al enviar información a Firestore: $e');
   }
 }
 
@@ -30,4 +57,3 @@ Future<List<ProductosModel>> fetchProductsData() async {
 
   return products;
 }
-

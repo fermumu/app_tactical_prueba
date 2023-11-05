@@ -42,6 +42,7 @@ dependencies:
   google_sign_in: ^6.1.5
   http: ^1.1.0
   image_picker: ^1.0.4
+  path: ^1.8.3
   url_launcher: ^6.2.1
 
 dev_dependencies:

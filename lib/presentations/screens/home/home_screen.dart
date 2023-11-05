@@ -1,6 +1,7 @@
 import 'package:apptacticalstore/config/services/firebase_database_service.dart';
 import 'package:apptacticalstore/presentations/screens/products/products_cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
@@ -171,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: _productosModel.length,
         itemBuilder: (context, index) {
           final product = _productosModel[index];
-
+          final imageUrl = product.image;
           return Card(
               elevation: 4.0,
               child: Column(
@@ -183,10 +184,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // CachedNetworkImage(
-                          //   imageUrl: product.image,
-                          //   fit: BoxFit.contain,
-                          // ),
+                          SizedBox(
+                            height: 105,
+                            width: 120,
+                            child: CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              fit: BoxFit.contain,
+                              placeholder: (_, __) {
+                                return const Center(
+                                  child: CupertinoActivityIndicator(
+                                    radius: 15,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+
                           // Expanded(
                           //   child: Image.network(
                           //     product.image,
