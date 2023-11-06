@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:apptacticalstore/config/services/firebase_database_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,6 +20,7 @@ class _CreateProductsState extends State<CreateProducts> {
   TextEditingController productPrice = TextEditingController();
   String? selectedImage;
   final ImagePicker _imagePicker = ImagePicker();
+  bool _sendingData = false;
 
   void _selectedImage() async {
     final XFile? pickedImage =
@@ -35,11 +37,15 @@ class _CreateProductsState extends State<CreateProducts> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Cargado'),
+          backgroundColor: const Color.fromARGB(234, 23, 130, 130),
+          title: const Text('!!!Genial¡¡¡'),
           content: const Text('Tu producto fue cargado con exito'),
           actions: <Widget>[
             TextButton(
-              child: const Text('Ok'),
+              child: const Text(
+                'Ok',
+                style: TextStyle(color: Color.fromARGB(255, 118, 238, 32)),
+              ),
               onPressed: () {
                 context.go('/home-page');
               },
@@ -110,16 +116,32 @@ class _CreateProductsState extends State<CreateProducts> {
                   ],
                 ),
               ),
-              ValidateButton(
-                  buttonText: 'ENVIAR',
-                  onPressed: () async {
-                    final double price =
-                        double.tryParse(productPrice.text) ?? 0.0;
-                    if (selectedImage != null) {
-                      await saveProduct(productName.text, price, selectedImage!)
-                          .then((_) => {_showConfirmationSaveProduct(context)});
-                    }
-                  })
+              _sendingData
+                  ? const Column(
+                      children: [
+                        CupertinoActivityIndicator(),
+                      ],
+                    )
+                  : ValidateButton(
+                      buttonText: 'Cargar',
+                      onPressed: () async {
+                        final double price =
+                            double.tryParse(productPrice.text) ?? 0.0;
+                        if (selectedImage != null) {
+                          setState(() {
+                            _sendingData = true;
+                          });
+                          await saveProduct(
+                                  productName.text, price, selectedImage!)
+                              .then((_) {
+                            setState(() {
+                              _sendingData = false;
+                            });
+
+                            _showConfirmationSaveProduct(context);
+                          });
+                        }
+                      })
             ],
           ),
         ),

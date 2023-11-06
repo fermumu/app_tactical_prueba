@@ -1,8 +1,11 @@
-import 'package:apptacticalstore/domain/models/productos_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fancy_flutter_dialog/fancy_flutter_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:apptacticalstore/domain/models/productos_model.dart';
+import 'package:apptacticalstore/presentations/components/validate_button.dart';
+
 
 class ProductsCart extends StatefulWidget {
   static const name = 'products-cart';
@@ -32,7 +35,7 @@ class _ProductsCartState extends State<ProductsCart> {
       child: Row(
         children: [
           Text(
-            'Total : \$${valorTotal(_productosCart)} ',
+            'Total : \$${formatCurrency(valorTotal(_productosCart))} ',
             style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14.0,
@@ -41,6 +44,15 @@ class _ProductsCartState extends State<ProductsCart> {
         ],
       ),
     );
+  }
+
+  String formatCurrency(String value) {
+    double precio = double.parse(value);
+    return NumberFormat.currency(
+      locale: 'es_CO',
+      symbol: '',
+      decimalDigits: 0,
+    ).format(precio);
   }
 
   String valorTotal(List<ProductosModel> listaProductos) {
@@ -55,17 +67,10 @@ class _ProductsCartState extends State<ProductsCart> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: const [
-          IconButton(
-            onPressed: null,
-            icon: Icon(Icons.store_outlined),
-            color: Colors.white,
-          )
-        ],
         title: const Text(
-          'Detalle',
+          'Detalle de productos',
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black),
+              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -99,8 +104,6 @@ class _ProductsCartState extends State<ProductsCart> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _productosCart.length,
                 itemBuilder: (context, index) {
-                  final String imagen = _productosCart[index].image;
-                  var item = _productosCart[index];
                   final product = _productosCart[index];
                   final imageUrl = product.image;
                   return Column(
@@ -113,21 +116,24 @@ class _ProductsCartState extends State<ProductsCart> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: Container(
+                                  child: SizedBox(
                                     width: 100,
                                     height: 100,
                                     child: CachedNetworkImage(
-                              imageUrl: imageUrl,
-                              fit: BoxFit.contain,
-                              placeholder: (_, __) {
-                                return const Center(
-                                  child: CupertinoActivityIndicator(
-                                    radius: 15,
+                                      imageUrl: imageUrl,
+                                      fit: BoxFit.contain,
+                                      placeholder: (_, __) {
+                                        return const Center(
+                                          child: CupertinoActivityIndicator(
+                                            radius: 15,
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                );
-                              },
-                            ),
-                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
                                 ),
                                 Column(
                                   children: [
@@ -145,19 +151,19 @@ class _ProductsCartState extends State<ProductsCart> {
                                         Container(
                                           width: 120,
                                           height: 40,
-                                          decoration: BoxDecoration(
-                                              color: Colors.red[600],
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 61, 118, 94),
                                               boxShadow: [
                                                 BoxShadow(
                                                   blurRadius: 6.0,
-                                                  color: Colors.blue.shade400,
-                                                  offset:
-                                                      const Offset(0.0, 1.0),
+                                                  color: Color.fromARGB(
+                                                      255, 30, 111, 177),
+                                                  offset: Offset(0.0, 1.0),
                                                 )
                                               ],
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(50.0))),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50.0))),
                                           margin:
                                               const EdgeInsets.only(top: 20),
                                           padding: const EdgeInsets.all(2),
@@ -202,13 +208,13 @@ class _ProductsCartState extends State<ProductsCart> {
                                   ],
                                 ),
                                 const SizedBox(
-                                  width: 38,
+                                  width: 10,
                                 ),
                                 Text(
-                                  product.price.toString(),
+                                  formatCurrency(product.price.toString()),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 24.0,
+                                      fontSize: 20.0,
                                       color: Colors.black),
                                 )
                               ],
@@ -217,7 +223,7 @@ class _ProductsCartState extends State<ProductsCart> {
                         ),
                       ),
                       const Divider(
-                        color: Colors.purple,
+                        color: Color.fromARGB(255, 39, 96, 176),
                       )
                     ],
                   );
@@ -234,37 +240,34 @@ class _ProductsCartState extends State<ProductsCart> {
                 height: 100,
                 width: 200,
                 padding: const EdgeInsets.only(top: 50),
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20)))),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return FancyAlertDialog(
-                            title: "¿ACEPTAS REALIZAR EL PAGO?",
-                            backgroundColor: const Color(0xFF303F9F),
-                            message: "Do you really want to Exit ?",
-                            negativeBtnText: "Cancel",
-                            positiveBtnBackground: const Color(0xFFFF4081),
-                            positiveBtnText: "Rate",
-                            negativeBtnBackground: const Color(0xFFA9A7A8),
-                            onPositiveClicked: () {
-                              // Positive button clicked action
-                              print("Rate");
-                            },
-                            onNegativeClicked: () {
-                              // Negative button clicked action
-                              print("Cancel");
-                            },
-                          );
-                        },
-                      );
-                    },
-                    child: const Text('PAGAR')),
+                child: ValidateButton(
+                  buttonText: 'Enviar pedido',
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return FancyAlertDialog(
+                          title: "TU PEDIDO ESTA LISTO",
+                          backgroundColor:
+                              const Color.fromARGB(255, 6, 160, 160),
+                          message: "¿Deseas continuar con el proceso de pago?",
+                          negativeBtnText: "Cancelar",
+                          positiveBtnBackground: const Color(0xFFFF4081),
+                          positiveBtnText: "Pagar",
+                          negativeBtnBackground: const Color(0xFFA9A7A8),
+                          onPositiveClicked: () {
+                            // Positive button clicked action
+                            print("Rate");
+                          },
+                          onNegativeClicked: () {
+                            // Negative button clicked action
+                            print("Cancel");
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
               )
             ],
           ),
@@ -281,7 +284,9 @@ class _ProductsCartState extends State<ProductsCart> {
 
   _removeProduct(int index) {
     setState(() {
-      _productosCart[index].quantity--;
+      if (_productosCart[index].quantity > 0) {
+        _productosCart[index].quantity--;
+      }
     });
   }
 }

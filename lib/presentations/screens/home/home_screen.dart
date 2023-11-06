@@ -1,10 +1,11 @@
-import 'package:apptacticalstore/config/services/firebase_database_service.dart';
-import 'package:apptacticalstore/presentations/screens/products/products_cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:apptacticalstore/config/services/firebase_database_service.dart';
+import 'package:apptacticalstore/presentations/screens/products/products_cart.dart';
 import 'package:apptacticalstore/presentations/components/logo2.dart';
 import 'package:apptacticalstore/domain/models/productos_model.dart';
 
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<ProductosModel> _productosModel = List<ProductosModel>.empty();
-  List<ProductosModel> _listProductosCart = [];
+  final List<ProductosModel> _listProductosCart = [];
 
   @override
   void initState() {
@@ -61,6 +62,15 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _productosModel = products;
     });
+  }
+
+  String formatCurrency(String value) {
+    double precio = double.parse(value);
+    return NumberFormat.currency(
+      locale: 'es_CO',
+      symbol: '',
+      decimalDigits: 0,
+    ).format(precio);
   }
 
   @override
@@ -150,10 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   if (isUserLoggedIn()) {
                     _showLogoutConfirmationDialog(context);
-                  } else {
-                    // Puedes mostrar un mensaje al usuario de que no está autenticado
-                    // o redirigirlo a la pantalla de inicio de sesión si lo prefieres.
-                  }
+                  } else {}
                 },
               ),
             ],
@@ -185,8 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(
-                            height: 105,
-                            width: 120,
+                            height: 110,
                             child: CachedNetworkImage(
                               imageUrl: imageUrl,
                               fit: BoxFit.contain,
@@ -199,13 +205,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             ),
                           ),
-
-                          // Expanded(
-                          //   child: Image.network(
-                          //     product.image,
-                          //     fit: BoxFit.contain,
-                          //   ),
-                          // ),
                           Text(
                             product.name,
                             textAlign: TextAlign.center,
@@ -218,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 25,
                               ),
                               const Text('precio'),
-                              Text(product.price.toString(),
+                              Text(formatCurrency(product.price.toString()),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold)),
                               Padding(
@@ -234,12 +233,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ? const Icon(
                                                 Icons.shopping_cart,
                                                 color: Colors.green,
-                                                size: 30,
+                                                size: 20,
                                               )
                                             : const Icon(
                                                 Icons.shopping_cart,
                                                 color: Colors.red,
-                                                size: 30,
+                                                size: 20,
                                               ),
                                     onTap: () {
                                       setState(() {
