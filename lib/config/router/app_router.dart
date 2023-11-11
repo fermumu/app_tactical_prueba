@@ -1,5 +1,6 @@
 import 'package:apptacticalstore/presentations/screens/home/home_screen.dart';
 import 'package:apptacticalstore/presentations/screens/login/loginscreen.dart';
+import 'package:apptacticalstore/presentations/screens/products/admin_products.dart';
 import 'package:apptacticalstore/presentations/screens/products/create_products.dart';
 import 'package:apptacticalstore/presentations/screens/registrer/registrerscreen.dart';
 import 'package:go_router/go_router.dart';
@@ -24,5 +25,10 @@ final appRouter = GoRouter(initialLocation: '/', routes: [
     path: '/crear-producto',
     name: CreateProducts.name,
     builder: (context, state) => const CreateProducts(),
+  ),
+  GoRoute(
+    path: '/admin_products',
+    name: AdminProducts.name,
+    builder: (context, state) => const AdminProducts(),
   ),
 ]);

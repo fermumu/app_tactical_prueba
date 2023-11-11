@@ -158,7 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.white,
                   ),
                 ),
-                onTap: () {},
+                onTap: () {
+                  context.go('/admin_products');
+                },
               ),
               //todo DESARROLLAR PANTALLA DE FAVORITOS
               ListTile(
@@ -301,7 +303,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ],
-              ));
+              )
+              );
         });
   }
 }
