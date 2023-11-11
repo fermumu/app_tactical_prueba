@@ -146,6 +146,48 @@ class _HomeScreenState extends State<HomeScreen> {
                   context.go('/crear-producto');
                 },
               ),
+              //todo DESARROLLAR PANTALLA PARA ADMIN PRODUCTS
+              ListTile(
+                trailing: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  'Adminitrar productos',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onTap: () {},
+              ),
+              //todo DESARROLLAR PANTALLA DE FAVORITOS
+              ListTile(
+                trailing: const Icon(
+                  Icons.favorite_border_outlined,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  'Favoritos',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onTap: () {},
+              ),
+              //todo ENRUTAR A CARRO DE COMPRAS
+              ListTile(
+                trailing: const Icon(
+                  Icons.shopping_cart_checkout_outlined,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  'Carro de compras',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onTap: () {},
+              ),
               ListTile(
                 trailing: const Icon(
                   Icons.logout,

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:apptacticalstore/domain/models/productos_model.dart';
 import 'package:apptacticalstore/presentations/components/validate_button.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductsCart extends StatefulWidget {
   static const name = 'products-cart';
@@ -149,16 +149,16 @@ class _ProductsCartState extends State<ProductsCart> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Container(
-                                          width: 120,
+                                          width: 125,
                                           height: 40,
                                           decoration: const BoxDecoration(
                                               color: Color.fromARGB(
-                                                  255, 61, 118, 94),
+                                                  224, 33, 32, 32),
                                               boxShadow: [
                                                 BoxShadow(
-                                                  blurRadius: 6.0,
+                                                  blurRadius: 8.0,
                                                   color: Color.fromARGB(
-                                                      255, 30, 111, 177),
+                                                      255, 87, 96, 103),
                                                   offset: Offset(0.0, 1.0),
                                                 )
                                               ],
@@ -172,7 +172,7 @@ class _ProductsCartState extends State<ProductsCart> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               const SizedBox(
-                                                height: 8.0,
+                                                height: 5.0,
                                               ),
                                               IconButton(
                                                 onPressed: () {
@@ -186,7 +186,7 @@ class _ProductsCartState extends State<ProductsCart> {
                                                 '${_productosCart[index].quantity}',
                                                 style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 22,
+                                                    fontSize: 20,
                                                     color: Colors.white),
                                               ),
                                               IconButton(
@@ -257,11 +257,11 @@ class _ProductsCartState extends State<ProductsCart> {
                           negativeBtnBackground: const Color(0xFFA9A7A8),
                           onPositiveClicked: () {
                             // Positive button clicked action
-                            print("Rate");
+                            msgListaPedido();
                           },
                           onNegativeClicked: () {
                             // Negative button clicked action
-                            print("Cancel");
+                            Navigator.of(context).pop();
                           },
                         );
                       },
@@ -288,5 +288,35 @@ class _ProductsCartState extends State<ProductsCart> {
         _productosCart[index].quantity--;
       }
     });
+  }
+
+  void msgListaPedido() async {
+    String pedido = "";
+    String fecha = DateTime.now().toString();
+    pedido = pedido + "FECHA:" + fecha.toString();
+    pedido = pedido + "\n";
+    pedido = pedido + "MEGA DESCUENTOS A DOMICILIO";
+    pedido = pedido + "\n";
+    pedido = pedido + "CLIENTE: FLUTTER - DART";
+    pedido = pedido + "\n";
+    pedido = pedido + "_____________";
+
+    for (int i = 0; i < _productosCart.length; i++) {
+      pedido = '$pedido' +
+          "\n" +
+          "Producto : " +
+          _productosCart[i].name +
+          "\n" +
+          "Cantidad: " +
+          _productosCart[i].quantity.toString() +
+          "\n" +
+          "Precio : " +
+          _productosCart[i].price.toString() +
+          "\n" +
+          "\_________________________\n";
+    }
+    pedido = pedido + "TOTAL:" + valorTotal(_productosCart);
+
+    await launchUrl(Uri.parse('https://wa.me/${573185936956}?text=$pedido'));
   }
 }

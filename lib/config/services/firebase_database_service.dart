@@ -7,15 +7,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 FirebaseFirestore dataBase = FirebaseFirestore.instance;
 final storage = FirebaseStorage.instance;
 
-// Future<void> saveProduct(String name, double price, String imageUrl) async {
-//   try {
-//     await dataBase
-//         .collection('productos')
-//         .add({'name': name, 'price': price, 'imageUrl': imageUrl});
-//   } catch (e) {
-//     print('Error al enviar informacion bd ... $e');
-//   }
-// }
 
 Future<void> saveProduct(String name, double price, String imagePath) async {
   try {
