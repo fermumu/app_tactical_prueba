@@ -19,15 +19,15 @@ class _AdminProductsState extends State<AdminProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Administrador de productos'),
-        leading: IconButton(
-            onPressed: () {
-              context.go('/home-page');
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-            )),
-      ),
+          title: const Text('Administrador de productos'),
+          leading: IconButton(
+              onPressed: () {
+                context.go('/home-page');
+              },
+              icon: const Icon(
+                Icons.arrow_back,
+              )),
+          backgroundColor: const Color.fromARGB(255, 121, 119, 119)),
       body: _CardsProducts(),
     );
   }
@@ -65,53 +65,98 @@ class __CardsProductsState extends State<_CardsProducts> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-        ),
-        itemCount: _productosModel.length,
-        itemBuilder: (context, index) {
-          final product = _productosModel[index];
-          final imageUrl = product.image;
-          return Card(
-            elevation: 5.0,
-            child: Row(
-              children: [
-                SizedBox(
-                  height: 110,
-                  child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    fit: BoxFit.contain,
-                    placeholder: (_, __) {
-                      return const Center(
-                        child: CupertinoActivityIndicator(
-                          radius: 15,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _productosModel.length,
+              itemBuilder: (context, index) {
+                final product = _productosModel[index];
+                final imageUrl = product.image;
+                return Card(
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      side: BorderSide(color: Colors.grey)),
+                  elevation: 5.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Stack(
+                          fit: StackFit.loose,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                SizedBox(
+                                  width: 110,
+                                  height: 110,
+                                  child: CachedNetworkImage(
+                                    imageUrl: imageUrl,
+                                    fit: BoxFit.contain,
+                                    placeholder: (_, __) {
+                                      return const Center(
+                                        child: CupertinoActivityIndicator(
+                                          radius: 15,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 110,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(25.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          product.name,
+                                          textAlign: TextAlign.center,
+                                          style:
+                                              const TextStyle(fontSize: 20.0),
+                                        ),
+                                        Text(
+                                          formatCurrency(
+                                              product.price.toString()),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 110,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {},
+                                          icon:const Icon(Icons.delete)),
+                                      IconButton(
+                                          onPressed: () {},
+                                          icon:const Icon(Icons.edit_document)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                      );
-                    },
-                  ),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      product.name,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 20.0),
+                      ],
                     ),
-                    Text(formatCurrency(product.price.toString()),
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                Column(
-                  children: [
-                    IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
-                    IconButton(
-                        onPressed: () {}, icon: Icon(Icons.edit_document)),
-                  ],
-                )
-              ],
-            ),
-          );
-        });
+                  ),
+                );
+              }),
+        ],
+      ),
+    );
   }
 }
