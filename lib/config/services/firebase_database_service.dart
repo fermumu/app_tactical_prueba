@@ -77,39 +77,17 @@ Future<void> updateProduct({
   }
 }
 
+Future<void> deleteProduct(String docId, String imagePath) async {
+  try {
+    // 1. Eliminar el documento de Firestore
+    await dataBase.collection('productos').doc(docId).delete();
 
+    // 2. Eliminar la imagen de Firebase Storage
+    final imageFileName = 'product_images/${basename(imagePath)}';
+    final imageReference = storage.ref().child(imageFileName);
+    await imageReference.delete();
+  } catch (e) {
+    print('Error al eliminar producto: $e');
+  }
+}
 
-
-
-
-// Future<void> updateProduct(
-//     String productId, String name, String price, String imagePath) async {
-//   try {
-//     // 1. Verificar si hay una nueva imagen para subir
-//     if (imagePath != null && imagePath.isNotEmpty) {
-//       File imageFile = File(imagePath);
-
-//       // 2. Subir la nueva imagen a Firebase Storage y obtener la URL
-//       final imageFileName = 'product_images/${basename(imageFile.path)}';
-//       final imageReference = storage.ref().child(imageFileName);
-//       final uploadTask = imageReference.putFile(imageFile);
-//       final TaskSnapshot storageTaskSnapshot = await uploadTask;
-//       final imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
-
-//       // 3. Actualizar los datos en Firestore, incluyendo la nueva URL de la imagen
-//       await dataBase.collection('productos').doc(productId).update({
-//         'name': name,
-//         'price': price,
-//         'imageUrl': imageUrl,
-//       });
-//     } else {
-//       // Si no hay una nueva imagen, actualizar solo los otros campos
-//       await dataBase.collection('productos').doc(productId).update({
-//         'name': name,
-//         'price': price,
-//       });
-//     }
-//   } catch (e) {
-//     print('Error al actualizar información en Firestore: $e');
-//   }
-// }

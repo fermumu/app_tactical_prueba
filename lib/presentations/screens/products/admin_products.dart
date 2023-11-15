@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:apptacticalstore/config/services/firebase_database_service.dart';
 import 'package:apptacticalstore/domain/models/productos_model.dart';
 import 'package:apptacticalstore/presentations/screens/products/edit_products.dart';
@@ -8,7 +10,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class AdminProducts extends StatefulWidget {
-  
   static const name = 'admin_products';
   const AdminProducts({super.key});
 
@@ -41,6 +42,7 @@ class _CardsProducts extends StatefulWidget {
 }
 
 class __CardsProductsState extends State<_CardsProducts> {
+  bool productoEliminado = false;
   List<ProductosModel> _productosModel = List<ProductosModel>.empty();
 
   Future<void> _loadProductsFromFirestore() async {
@@ -63,6 +65,40 @@ class __CardsProductsState extends State<_CardsProducts> {
       symbol: '',
       decimalDigits: 0,
     ).format(precio);
+  }
+
+  Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
+    Completer<bool> completer = Completer<bool>();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ELIMINAR PRODUCTO',
+              style: TextStyle(
+                color: Colors.red,
+              )),
+          content:
+              const Text('¿Estás seguro de que deseas eliminar este producto?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                completer.complete(false);
+              },
+            ),
+            TextButton(
+              child: const Text('Eliminar'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+                completer.complete(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+    return completer.future;
   }
 
   @override
@@ -140,7 +176,19 @@ class __CardsProductsState extends State<_CardsProducts> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       IconButton(
-                                          onPressed: () {},
+                                          onPressed: () async {
+                                            // Llamar a la función de mostrar el diálogo de confirmación
+                                            bool confirmDelete =
+                                                await _showDeleteConfirmationDialog(
+                                                    context);
+
+                                            // Si el usuario confirma la eliminación, entonces eliminar el producto
+                                            if (confirmDelete == true) {
+                                              await deleteProduct(
+                                                  product.docId, product.image);
+                                              _loadProductsFromFirestore();
+                                            }
+                                          },
                                           icon: const Icon(Icons.delete)),
                                       IconButton(
                                           onPressed: () {
