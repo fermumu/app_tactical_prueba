@@ -1,5 +1,6 @@
 
 class ProductosModel {
+  final String docId;
   final String name;
   final String image;
   final String? color;
@@ -7,7 +8,9 @@ class ProductosModel {
   int quantity;
 
   ProductosModel(
-      {required this.name,
+      {
+      required this.docId,  
+      required this.name,
       required this.image,
       this.color,
       required this.price,

@@ -1,5 +1,6 @@
 import 'package:apptacticalstore/config/services/firebase_database_service.dart';
 import 'package:apptacticalstore/domain/models/productos_model.dart';
+import 'package:apptacticalstore/presentations/screens/products/edit_products.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class AdminProducts extends StatefulWidget {
+  
   static const name = 'admin_products';
   const AdminProducts({super.key});
 
@@ -139,10 +141,20 @@ class __CardsProductsState extends State<_CardsProducts> {
                                     children: [
                                       IconButton(
                                           onPressed: () {},
-                                          icon:const Icon(Icons.delete)),
+                                          icon: const Icon(Icons.delete)),
                                       IconButton(
-                                          onPressed: () {},
-                                          icon:const Icon(Icons.edit_document)),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditProducts(
+                                                        docId: product.docId),
+                                              ),
+                                            );
+                                          },
+                                          icon:
+                                              const Icon(Icons.edit_document)),
                                     ],
                                   ),
                                 ),

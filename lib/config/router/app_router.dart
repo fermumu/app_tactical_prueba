@@ -31,4 +31,5 @@ final appRouter = GoRouter(initialLocation: '/', routes: [
     name: AdminProducts.name,
     builder: (context, state) => const AdminProducts(),
   ),
+  
 ]);

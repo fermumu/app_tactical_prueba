@@ -1,26 +1,29 @@
 import 'dart:io';
 import 'package:apptacticalstore/config/services/firebase_database_service.dart';
+import 'package:apptacticalstore/presentations/components/validate_button.dart';
+import 'package:apptacticalstore/presentations/screens/products/admin_products.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:apptacticalstore/presentations/components/validate_button.dart';
 
-class CreateProducts extends StatefulWidget {
-  static const name = 'crear-producto';
-  const CreateProducts({super.key});
+class EditProducts extends StatefulWidget {
+  static const name = 'edit-products';
+  final String docId;
+  const EditProducts({super.key, required this.docId});
 
   @override
-  State<CreateProducts> createState() => _CreateProductsState();
+  State<EditProducts> createState() => _EditProductsState();
 }
 
-class _CreateProductsState extends State<CreateProducts> {
-  TextEditingController productName = TextEditingController();
-  TextEditingController productPrice = TextEditingController();
+class _EditProductsState extends State<EditProducts> {
+  TextEditingController editProductName = TextEditingController();
+  TextEditingController editProductPrice = TextEditingController();
   String? selectedImage;
   final ImagePicker _imagePicker = ImagePicker();
   bool _sendingData = false;
+  String? docId;
 
+  //Selleciona imagen de galeria
   void _selectedImage() async {
     final XFile? pickedImage =
         await _imagePicker.pickImage(source: ImageSource.gallery);
@@ -31,14 +34,14 @@ class _CreateProductsState extends State<CreateProducts> {
     }
   }
 
-  Future<void> _showConfirmationSaveProduct(BuildContext context) async {
+  Future<void> _showConfirmationEditProduct(BuildContext context) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: const Color.fromARGB(234, 23, 130, 130),
-          title: const Text('!!!Genial¡¡¡'),
-          content: const Text('Tu producto fue cargado con exito'),
+          title: const Text('!!!Pefecto¡¡¡'),
+          content: const Text('El producto fue editado con exito'),
           actions: <Widget>[
             TextButton(
               child: const Text(
@@ -46,7 +49,12 @@ class _CreateProductsState extends State<CreateProducts> {
                 style: TextStyle(color: Color.fromARGB(255, 118, 238, 32)),
               ),
               onPressed: () {
-                context.go('/home-page');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AdminProducts(),
+                  ),
+                );
               },
             ),
           ],
@@ -57,15 +65,22 @@ class _CreateProductsState extends State<CreateProducts> {
 
   @override
   Widget build(BuildContext context) {
+    String docId = widget.docId;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Crear producto'),
-        backgroundColor: Colors.grey[800],
+        title: const Text('Editar productos'),
+        backgroundColor: const Color.fromARGB(255, 169, 222, 138),
         leading: IconButton(
-            onPressed: () {
-              context.go('/home-page');
-            },
-            icon: const Icon(Icons.arrow_back)),
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AdminProducts(),
+              ),
+            );
+          },
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -101,13 +116,13 @@ class _CreateProductsState extends State<CreateProducts> {
                 child: Column(
                   children: [
                     TextFormField(
-                      controller: productName,
+                      controller: editProductName,
                       decoration: const InputDecoration(
                         labelText: 'Nombre del producto',
                       ),
                     ),
                     TextFormField(
-                      controller: productPrice,
+                      controller: editProductPrice,
                       decoration: const InputDecoration(
                         labelText: 'Precio',
                       ),
@@ -125,19 +140,20 @@ class _CreateProductsState extends State<CreateProducts> {
                       buttonText: 'Cargar',
                       onPressed: () async {
                         final double price =
-                            double.tryParse(productPrice.text) ?? 0.0;
+                            double.tryParse(editProductPrice.text) ?? 0.0;
                         if (selectedImage != null) {
                           setState(() {
                             _sendingData = true;
                           });
-                          await saveProduct(
-                              productName.text, price, selectedImage!);
+
+                          await updateProduct(docId, editProductName.text,
+                              price, selectedImage!);
 
                           setState(() {
                             _sendingData = false;
                           });
 
-                          _showConfirmationSaveProduct( context);
+                          _showConfirmationEditProduct(context);
                         }
                       })
             ],
