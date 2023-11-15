@@ -43,50 +43,41 @@ Future<List<ProductosModel>> fetchProductsData() async {
     final double price = data['price'];
     final String imageUrl = data['imageUrl'];
 
-    final product = ProductosModel(docId: docId,name: name, image: imageUrl, price: price);
+    final product =
+        ProductosModel(docId: docId, name: name, image: imageUrl, price: price);
     products.add(product);
   });
 
   return products;
 }
 
-Future<void> updateProduct(String docId, String name, double price, String imagePath) async {
+Future<void> updateProduct({
+  required String docId,
+  required String name,
+  required double price,
+  required String imagePath,
+}) async {
   try {
-    // 1. Obtener el documento existente
-    DocumentSnapshot docSnapshot = await dataBase.collection('productos').doc(docId).get();
+    // Subir la nueva imagen y obtener la URL
+    File imageFile = File(imagePath);
+    final imageFileName = 'product_images/${basename(imageFile.path)}';
+    final imageReference = storage.ref().child(imageFileName);
+    final uploadTask = imageReference.putFile(imageFile);
+    final TaskSnapshot storageTaskSnapshot = await uploadTask;
+    final imageUrl = await storageTaskSnapshot.ref.getDownloadURL();
 
-    // 2. Verificar la existencia de campos
-    if (docSnapshot.exists) {
-      // 3. Actualizar los campos existentes y manejar la imagen si es necesario
-      final Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
-
-      String currentImageUrl = data.containsKey('imageUrl') ? data['imageUrl'] : '';
-      final String currentName = data.containsKey('name') ? data['name'] : '';
-      final double currentPrice = data.containsKey('price') ? (data['price'] as num).toDouble() : 0.0;
-
-      if (imagePath != null) {
-        // Subir la nueva imagen y obtener la URL
-        File imageFile = File(imagePath);
-        final imageFileName = 'product_images/${basename(imageFile.path)}';
-        final imageReference = storage.ref().child(imageFileName);
-        final uploadTask = imageReference.putFile(imageFile);
-        final TaskSnapshot storageTaskSnapshot = await uploadTask;
-        currentImageUrl = await storageTaskSnapshot.ref.getDownloadURL();
-      }
-
-      // 4. Actualizar los datos en Firestore con la nueva información
-      await dataBase.collection('productos').doc(docId).update({
-        'name': name.isNotEmpty ? name : currentName,
-        'price': price > 0 ? price : currentPrice,
-        'imageUrl': currentImageUrl,
-      });
-    } else {
-      print('El documento con ID $docId no existe.');
-    }
+    // Actualizar los datos en Firestore con la nueva información
+    await dataBase.collection('productos').doc(docId).update({
+      'name': name,
+      'price': price,
+      'imageUrl': imageUrl,
+    });
   } catch (e) {
     print('Error al actualizar información en Firestore: $e');
   }
 }
+
+
 
 
 

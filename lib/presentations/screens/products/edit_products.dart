@@ -146,8 +146,11 @@ class _EditProductsState extends State<EditProducts> {
                             _sendingData = true;
                           });
 
-                          await updateProduct(docId, editProductName.text,
-                              price, selectedImage!);
+                          await updateProduct(
+                              docId: docId,
+                              name: editProductName.text,
+                              price: price,
+                              imagePath: selectedImage!);
 
                           setState(() {
                             _sendingData = false;
