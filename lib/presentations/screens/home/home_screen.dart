@@ -146,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   context.go('/crear-producto');
                 },
               ),
-              //todo DESARROLLAR PANTALLA PARA ADMIN PRODUCTS
+
               ListTile(
                 trailing: const Icon(
                   Icons.settings,
@@ -176,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 onTap: () {},
               ),
-              //todo ENRUTAR A CARRO DE COMPRAS
+
               ListTile(
                 trailing: const Icon(
                   Icons.shopping_cart_checkout_outlined,
@@ -188,7 +188,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.white,
                   ),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductsCart(_listProductosCart),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 trailing: const Icon(
