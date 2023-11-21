@@ -90,4 +90,3 @@ Future<void> deleteProduct(String docId, String imagePath) async {
     print('Error al eliminar producto: $e');
   }
 }
-
