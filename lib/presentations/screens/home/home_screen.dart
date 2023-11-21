@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<ProductosModel> _productosModel = List<ProductosModel>.empty();
   final List<ProductosModel> _listProductosCart = [];
+  final List<ProductosModel> _listProductosFavoritos = [];
 
   @override
   void initState() {
@@ -239,8 +240,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     fit: StackFit.loose,
                     alignment: Alignment.center,
                     children: [
+                      Positioned(
+                          top: -6,
+                          right: -6,
+                          child: IconButton(
+                            icon: (!_listProductosFavoritos.contains(product))
+                                ? const Icon(Icons.favorite_border,
+                                    color: Colors.grey)
+                                : const Icon(Icons.favorite, color: Colors.red),
+                            onPressed: () {
+                              setState(() {
+                                if (!_listProductosFavoritos
+                                    .contains(product)) {
+                                  _listProductosFavoritos.add(product);
+                                } else {
+                                  _listProductosFavoritos.remove(product);
+                                }
+                              });
+                            },
+                          )),
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           SizedBox(
                             height: 110,
@@ -256,21 +276,43 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             ),
                           ),
-                          Text(
-                            product.name,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 20.0),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  product.name,
+                                  style: const TextStyle(fontSize: 20.0),
+                                ),
+                                const Row(
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.yellow,
+                                    ),
+                                    Text(
+                                      '4.2',
+                                      style: TextStyle(color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               const SizedBox(
-                                height: 25,
+                                width: 10,
                               ),
-                              const Text('precio'),
-                              Text(formatCurrency(product.price.toString()),
+                              Text(
+                                  '\$ ${formatCurrency(product.price.toString())}',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold)),
+                              const SizedBox(
+                                width: 60,
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(
                                   right: 8.0,
@@ -294,10 +336,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onTap: () {
                                       setState(() {
                                         if (!_listProductosCart
-                                            .contains(product))
+                                            .contains(product)) {
                                           _listProductosCart.add(product);
-                                        else
+                                        } else {
                                           _listProductosCart.remove(product);
+                                        }
                                       });
                                     },
                                   ),
