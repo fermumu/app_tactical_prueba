@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:animate_do/animate_do.dart';
 
 class FavoriteProducts extends StatefulWidget {
   static const name = 'favorite_product';
@@ -61,26 +62,45 @@ class _FavoriteProductsState extends State<FavoriteProducts> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                SizedBox(
-                                  width: 110,
-                                  height: 110,
-                                  child: CachedNetworkImage(
-                                    imageUrl: imageUrl,
-                                    fit: BoxFit.contain,
-                                    placeholder: (_, __) {
-                                      return const Center(
-                                        child: CupertinoActivityIndicator(
-                                          radius: 15,
-                                        ),
-                                      );
-                                    },
+                                Swing(
+                                  duration: const Duration(seconds: 1),
+                                  child: SizedBox(
+                                    width: 110,
+                                    height: 110,
+                                    child: CachedNetworkImage(
+                                      imageUrl: imageUrl,
+                                      fit: BoxFit.contain,
+                                      placeholder: (_, __) {
+                                        return const Center(
+                                          child: CupertinoActivityIndicator(
+                                            radius: 15,
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                                 Column(
                                   children: [
-                                    Text(product.name),
-                                    Text(
-                                        '\$ ${formatCurrency(product.price.toString())}')
+                                    ElasticInLeft(
+                                      child: Text(
+                                        product.name,
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    FadeInDownBig(
+                                      child: Text(
+                                        '\$ ${formatCurrency(product.price.toString())}',
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
                                   ],
                                 )
                               ],

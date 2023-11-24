@@ -76,6 +76,14 @@ class _HomeScreenState extends State<HomeScreen> {
     ).format(precio);
   }
 
+  final List<String> imagesUrlList = [
+    'assets/images_promo/PRO.jpg',
+    'assets/images_promo/pru.jpg',
+    'assets/images_company/logo2.jpg',
+  ];
+
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -240,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(left: 10, top: 15),
                   height: 180,
                   child: ListView.builder(
-                    itemCount: _productosModel.length,
+                    itemCount: imagesUrlList.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       return Row(
@@ -256,17 +264,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   borderRadius: BorderRadius.circular(20)),
                               child: AspectRatio(
                                 aspectRatio: 2,
-                                child: CachedNetworkImage(
-                                  imageUrl: '${_productosModel[index].image}' +
-                                      '?alt=media',
-                                  fit: BoxFit.cover,
-                                  placeholder: (_, __) {
-                                    return const Center(
-                                      child: CupertinoActivityIndicator(
-                                        radius: 15,
-                                      ),
-                                    );
-                                  },
+                                child: Image.asset(
+                                  imagesUrlList[index],
                                 ),
                               ),
                             ),
